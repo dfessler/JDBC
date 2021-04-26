@@ -8,9 +8,25 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 
-public class App {
+public class App
+{
+    static Connection con;
 
     public static void main(String[] args) throws ParseException {
+
+        String url = "jdbc:mysql://127.0.0.1:3306/test";
+        String user = "root2";
+        String pw = "1234";
+
+        try
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, pw);
+
+        } catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
         int insert = 0;
         do {
@@ -73,6 +89,14 @@ public class App {
             System.out.println();
         } while (insert !=5 );
 
+        try
+        {
+            con.close();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
 
 
 
@@ -81,13 +105,8 @@ public class App {
     }
 
     public static void showInvoices() {
-        try {
-
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // 1. Get Connection
-            Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root2", "1234");
-
+        try
+        {
             Statement stmt = con.createStatement();
 
             ResultSet rs = stmt.executeQuery("select * from Invoice");
@@ -97,7 +116,7 @@ public class App {
 
                 System.out.println(rs.getInt(1) + " " + rs.getDate(2) + " " + rs.getString(3) + " " + rs.getDouble(4) + " " + rs.getBoolean(5));
             }
-            con.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -106,20 +125,11 @@ public class App {
     public static void insertInvoice(Date date, String description, double value, Boolean paid) {
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // 1. Get Connection
-            Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root2", "1234");
-
-            // 3. Execute statement
-
 
             String sql = "insert into Invoice (date, description, value, paid) values (?,?,?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String lastCrawlDate = dateFormat.format(date);
-            Date utilDate = dateFormat.parse(lastCrawlDate);
-            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 
             ps.setDate(1, sqlDate);
             ps.setString(2, description);
@@ -127,7 +137,6 @@ public class App {
             ps.setBoolean(4, paid);
             ps.executeUpdate();
 
-            con.close();
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -135,17 +144,12 @@ public class App {
 
     public static void updateInvoice(int id, Date date, String description, double value, Boolean paid) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // 1. Get Connection
-            Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root2", "1234");
 
             String sql = "Update Invoice set date = ?, description = ?, value = ?, paid = ? where id = ? ";
             PreparedStatement ps = con.prepareStatement(sql);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String lastCrawlDate = dateFormat.format(date);
-            Date utilDate = dateFormat.parse(lastCrawlDate);
-            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
             ps.setDate(1, sqlDate);
             ps.setString(2,description);
             ps.setDouble(3,value);
@@ -163,10 +167,6 @@ public class App {
     public static void deleteInvoice(int id)
     {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // 1. Get Connection
-            Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root2", "1234");
 
             String sql = "Delete from Invoice where id = ?";
             PreparedStatement ps = con.prepareStatement(sql);

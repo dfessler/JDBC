@@ -1,4 +1,4 @@
-package Aufgabe4;
+package Aufgabe5;
 
 import java.util.Date;
 
@@ -10,7 +10,10 @@ public class Invoice
     private double value;
     private boolean paid;
 
+    public Invoice()
+    {
 
+    }
     public Invoice(int id, Date date, String description, double value, boolean paid)
     {
         this.id = id;
