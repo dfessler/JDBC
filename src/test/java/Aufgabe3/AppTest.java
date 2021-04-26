@@ -1,4 +1,4 @@
-package at.dfessler;
+package Aufgabe3;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,4 +1,4 @@
-package at.dfessler;
+package Aufgabe3;
 
 import java.sql.*;
 import java.text.DateFormat;
